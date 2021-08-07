@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.songyb.bs.MainActivity"
+    android:orientation="vertical">
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_height="70dp"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        app:justifyContent="space_between"
+        app:alignItems="center"
+        android:padding="10dp">
+        <com.songyb.bs.utils.MyImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/app_icon"
+            android:layout_gravity="center_vertical"/>
+        <com.songyb.bs.utils.MyImageView
+            android:id="@+id/login_button"
+            android:layout_marginLeft="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/login"
+            android:layout_gravity="center_vertical"/>
+    </com.google.android.flexbox.FlexboxLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:background="#F6F6F6"/>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.songyb.bs.MainActivity"
+        android:orientation="vertical"
+        android:padding="12dp">
+        <com.youth.banner.Banner
+            android:id="@+id/mBanner"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+        <ListView
+            android:id="@+id/lv_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</LinearLayout>
