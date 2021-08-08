@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     LoginClient();
                 } catch (IOException e) {
-                    Toast.makeText(LoginActivity.this,e.toString(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,e.toString(),Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     }else{
                         Looper.prepare();
-                        Toast.makeText(LoginActivity.this, "数据错乱", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "数据错乱", Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }
                 }
@@ -157,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Looper.prepare();
-                Toast.makeText(LoginActivity.this, "请求失败", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
         });
@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             switch(msg.what){
                 case 1:
                     loading.setVisibility(View.GONE);
-                    Toast.makeText(LoginActivity.this,"登陆成功",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,"登陆成功",Toast.LENGTH_SHORT).show();
                     break;
 
             }

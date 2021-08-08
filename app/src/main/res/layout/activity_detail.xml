@@ -2,52 +2,113 @@
 <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:justifyContent="center"
-    app:alignItems="center"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:flexDirection="column">
     <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/header_container"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#EBEBEB"
+        android:layout_height="100dp"
+        android:background="@drawable/border_bottom"
         app:flexDirection="row"
-        app:justifyContent="space_around">
+        app:justifyContent="space_between"
+        app:alignItems="center"
+        android:visibility="gone">
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="4dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/score"/>
+            <TextView
+                android:id="@+id/now_year"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="2008学年"
+                android:textColor="#7DBDF2"
+                android:textSize="20dp" />
+            <TextView
+                android:id="@+id/now_term"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:textColor="#7DBDF2"
+                android:text="第1学期"/>
+        </com.google.android.flexbox.FlexboxLayout>
         <TextView
-            android:id="@+id/now_year"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="2008学年"/>
-        <TextView
-            android:id="@+id/now_term"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="第1学期"/>
+            android:text="点击更换学年学期"
+            android:textColor="#7DBDF2"
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"/>
     </com.google.android.flexbox.FlexboxLayout>
-    <ListView
-        android:id="@+id/date_view"
-        android:visibility="gone"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/title_con"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:minHeight="80dp"
+        app:justifyContent="space_around"
+        android:visibility="gone"
+        android:background="@drawable/border_bottom"
+         android:layout_height="100dp">
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:text="课程名称"/>
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:text="学分"/>
+        <TextView
+            android:text="成绩"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:textSize="20dp"
+            android:gravity="center"/>
+        <TextView
+            android:text="绩点"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:textSize="20dp"
+            android:gravity="center"/>
+    </com.google.android.flexbox.FlexboxLayout>
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:justifyContent="center"
+        app:alignItems="center"
+        android:visibility="gone"
+        android:id="@+id/date_view_con">
+        <ListView
+            android:id="@+id/date_view"
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+        </ListView>
+    </com.google.android.flexbox.FlexboxLayout>
 
-    </ListView>
     <ListView
         android:id="@+id/lv_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"/>
-    <ProgressBar
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/list_loading"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:justifyContent="center"
+        app:alignItems="center">
+        <ProgressBar
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+    </com.google.android.flexbox.FlexboxLayout>
+
 </com.google.android.flexbox.FlexboxLayout>

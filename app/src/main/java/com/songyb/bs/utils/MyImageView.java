@@ -34,7 +34,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
                     setImageBitmap(bitmap);
                     break;
                 case ERROR:
-                    Toast.makeText(getContext(),"失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"失败",Toast.LENGTH_SHORT).show();
                     break;
 
                 default:

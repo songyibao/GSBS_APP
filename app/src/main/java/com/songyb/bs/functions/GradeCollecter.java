@@ -67,7 +67,7 @@ public class GradeCollecter {
                 if (response.isSuccessful()) {
                     grade_srting = response.body().string();
                     grade = JSONArray.parseArray(grade_srting, com.songyb.bs.classes.grade.class);
-                    Collections.reverse(grade);
+//                    Collections.reverse(grade);
                     for (com.songyb.bs.classes.grade grade_item : grade) {
                         Map<String, String> map_item = new HashMap<>();
                         map_item.put("课程名称", grade_item.getName());

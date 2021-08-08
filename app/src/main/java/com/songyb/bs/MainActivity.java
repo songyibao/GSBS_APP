@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-//        Toast.makeText(MainActivity.this,"username:"+Utils.getStorage(MainActivity.this,"AcountInfo","username")+",password:"+Utils.getStorage(MainActivity.this,"AcountInfo","password"),Toast.LENGTH_LONG).show();
+//        Toast.makeText(MainActivity.this,"username:"+Utils.getStorage(MainActivity.this,"AcountInfo","username")+",password:"+Utils.getStorage(MainActivity.this,"AcountInfo","password"),Toast.LENGTH_SHORT).show();
         initListView();
         initSwiper();
         initListener();
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(Utils.getStorage(MainActivity.this,"AcountInfo","username")!= null && Utils.getStorage(MainActivity.this,"AcountInfo","password")!= null){
-                    Toast.makeText(MainActivity.this,"您已登录",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"您已登录",Toast.LENGTH_SHORT).show();
                 }else{
                     // 给bnt1添加点击响应事件
                     Intent intent =new Intent(MainActivity.this, LoginActivity.class);
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             }).start();
 
         }else{
-            Toast.makeText(MainActivity.this,"未登录",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"未登录",Toast.LENGTH_SHORT).show();
         }
     }
     @Override
