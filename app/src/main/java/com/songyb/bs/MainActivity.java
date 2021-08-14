@@ -16,9 +16,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -35,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import com.songyb.bs.classes.Func;
 import com.songyb.bs.classes.Userinfo;
 import com.songyb.bs.detail.GradeDetailActivity;
+import com.songyb.bs.detail.TableDetailActivity;
 import com.songyb.bs.login.LoginActivity;
 import com.songyb.bs.utils.HttpGet;
 import com.songyb.bs.utils.MyImageView;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+//        Toast.makeText(MainActivity.this,String.valueOf(width)+String.valueOf(height), Toast.LENGTH_SHORT).show();
 //        Toast.makeText(MainActivity.this,"username:"+Utils.getStorage(MainActivity.this,"AcountInfo","username")+",password:"+Utils.getStorage(MainActivity.this,"AcountInfo","password"),Toast.LENGTH_SHORT).show();
         initListView();
         initSwiper();
@@ -100,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this,LoginActivity.class));
                     }else{
                         startActivity(new Intent(MainActivity.this, GradeDetailActivity.class));
+                    }
+                }else if(func_item.getName().equals("课表查询")){
+                    if(Utils.getStorage(MainActivity.this,"AcountInfo","username")==null || Utils.getStorage(MainActivity.this,"AcountInfo","password")==null){
+                        Toast.makeText(MainActivity.this,"请先登录",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    }else{
+                        startActivity(new Intent(MainActivity.this, TableDetailActivity.class));
                     }
                 }
             }

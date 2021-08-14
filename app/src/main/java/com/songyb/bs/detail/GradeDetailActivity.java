@@ -1,55 +1,37 @@
 package com.songyb.bs.detail;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alibaba.fastjson.JSONArray;
 import com.google.android.flexbox.FlexboxLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.songyb.bs.MainActivity;
 import com.songyb.bs.R;
-import com.songyb.bs.classes.Func;
-import com.songyb.bs.classes.grade;
 import com.songyb.bs.functions.GradeCollecter;
-import com.songyb.bs.utils.HttpGet;
-import com.songyb.bs.utils.MyImageView;
 import com.songyb.bs.utils.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 public class GradeDetailActivity extends AppCompatActivity {
+    private static final String TAG = "log";
     private FlexboxLayout date_view_con;
     private FlexboxLayout title_con;
     private FlexboxLayout header_container;
@@ -67,10 +49,11 @@ public class GradeDetailActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.grade_detail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+
         list_loading = (FlexboxLayout) findViewById(R.id.list_loading);
         list_view = (ListView) findViewById(R.id.lv_detail);
         date_view = (ListView) findViewById(R.id.date_view);
@@ -83,12 +66,6 @@ public class GradeDetailActivity extends AppCompatActivity {
         list_view.setVisibility(View.GONE);
         collecter = new GradeCollecter(Utils.getStorage(GradeDetailActivity.this, "AcountInfo", "username"),Utils.getStorage(GradeDetailActivity.this, "AcountInfo", "password"),GradeDetailActivity.this);
         collecter.search();
-//        Map<String,String> map_item = new HashMap<>();
-//        map_item.put("课程名称","课程名称");
-//        map_item.put("学分","学分");
-//        map_item.put("成绩","成绩");
-//        map_item.put("绩点","绩点");
-//        list_map.add(map_item);
         new Thread(new Runnable() {
             @Override
             public void run() {

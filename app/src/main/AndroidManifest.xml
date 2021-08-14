@@ -15,6 +15,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".detail.TableDetailActivity"
+            android:exported="true" />
+        <activity
             android:name=".detail.GradeDetailActivity"
             android:label="@string/title_activity_detail" />
         <activity
