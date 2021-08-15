@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -16,20 +18,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.songyb.bs.MainActivity;
 import com.songyb.bs.R;
 import com.songyb.bs.classes.table;
 import com.songyb.bs.functions.TableCollecter;
@@ -46,6 +54,8 @@ import java.util.stream.Collectors;
 
 public class TableDetailActivity extends AppCompatActivity {
     private final int DATA_OK = 0;
+    private final int DIALOG_SHOW = 1;
+    private TextView week_order;
     private FlexboxLayout top;
     private FlexboxLayout left;
     private FlexboxLayout right;
@@ -53,6 +63,7 @@ public class TableDetailActivity extends AppCompatActivity {
     private ListView left_list;
     private ListView right_list;
     private TableCollecter collecter;
+    private int now_week;
     private int width;
     private int height;
     private double content_height;
@@ -74,7 +85,8 @@ public class TableDetailActivity extends AppCompatActivity {
         setWidthAndHeight();
         matchView();
         initData();
-        Toast.makeText(this,String.valueOf(height)+"x"+String.valueOf(width),Toast.LENGTH_LONG).show();
+        initListener();
+        Toast.makeText(this,"数据加载中",Toast.LENGTH_LONG).show();
     }
     public void matchView(){
         top = (FlexboxLayout) findViewById(R.id.top);
@@ -83,8 +95,17 @@ public class TableDetailActivity extends AppCompatActivity {
         corner = (CardView) findViewById(R.id.corner);
         ViewGroup.LayoutParams params = corner.getLayoutParams();
         params.width = (int) Math.round(left_length);
+        week_order =(TextView) findViewById(R.id.week_order);
         corner.setLayoutParams(params);
 //        right_list = findViewById(R.id.right_list);
+    }
+    public void initListener(){
+        top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handler.sendEmptyMessage(DIALOG_SHOW);
+            }
+        });
     }
     public void initData(){
         collecter = new TableCollecter(Utils.getStorage(TableDetailActivity.this, "AcountInfo", "username"),Utils.getStorage(TableDetailActivity.this, "AcountInfo", "password"),TableDetailActivity.this);
@@ -113,7 +134,7 @@ public class TableDetailActivity extends AppCompatActivity {
         row_height = content_height/12;
         column_width = content_width/7;
     }
-    public void setWeek(){
+    public void setDay(){
         String day = collecter.getToday().get("day");
         CardView day_card =null;
         switch (Objects.requireNonNull(day)){
@@ -147,6 +168,40 @@ public class TableDetailActivity extends AppCompatActivity {
                 break;
         }
     }
+    public void alertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(TableDetailActivity.this);
+        builder.setTitle("选择当前学期");
+        // 设置我们自己定义的布局文件作为弹出框的Content
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        NumberPicker picker = new NumberPicker(TableDetailActivity.this);
+        picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        picker.setMaxValue(16);
+        picker.setMinValue(1);
+        picker.setValue(Integer.parseInt(Objects.requireNonNull(collecter.getToday().get("week"))));
+        picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                v.vibrate(30);
+//                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            }
+        });
+        builder.setView(picker);
+        builder.setPositiveButton("确定",
+                (dialog, which) -> {
+                    int i = picker.getValue();
+                    collecter.changeNowWeek(i);
+                    week_order.setText("第"+i+"周");
+                    handler.sendEmptyMessage(DATA_OK);
+                });
+
+        builder.setNegativeButton("取消",
+                (dialog, which) -> {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(getApplicationContext(), "取消选择",
+                            Toast.LENGTH_SHORT).show();
+                });
+        builder.show();
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void addAllClass(){
         List<table> table_other_week = collecter.getTable().stream().filter(s->!s.isIs_now_week()).collect(Collectors.toList());
@@ -162,9 +217,6 @@ public class TableDetailActivity extends AppCompatActivity {
             x = table_now_week.get(j);
             addClass(x.getName(),x.getDate(),x.getOrder(),x.getLength(),x.isIs_now_week(),color_arrays[i++%8]);
         }
-
-
-
     }
     @SuppressLint({"RtlHardcoded", "SetTextI18n"})
     public void addClass(String name, int date, int order, int length, boolean is_now_week,String color){
@@ -208,8 +260,11 @@ public class TableDetailActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DATA_OK:
-                    setWeek();
+                    setDay();
                     addAllClass();
+                    break;
+                case DIALOG_SHOW:
+                    alertDialog();
                     break;
             }
         }

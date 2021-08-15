@@ -66,5 +66,4 @@ dependencies {
     implementation 'com.github.getActivity:TitleBar:8.6'
     //flex-box by google
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
-
 }

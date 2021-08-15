@@ -49,23 +49,20 @@ public class TableCollecter {
         this.num = num;
         this.pass = pass;
         this.context = context;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("https://api.songyb.xyz/utils/set_term_start.php").build();
-                Call call2 = client.newCall(request);
-                String response2 = null;
-                try {
-                    response2 = call2.execute().body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    today = getTodayInfo(response2);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url("https://api.songyb.xyz/utils/set_term_start.php").build();
+            Call call2 = client.newCall(request);
+            String response2 = null;
+            try {
+                response2 = Objects.requireNonNull(call2.execute().body()).string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                today = getTodayInfo(response2);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }).start();
     }
@@ -101,7 +98,12 @@ public class TableCollecter {
         });
     }
 
-
+    public void changeNowWeek(int week){
+        for(int i=0;i<table.size();i++){
+            table.get(i).setIs_now_week(is_now_week(week, table.get(i).getWeek()));
+        }
+        today.put("week",String.valueOf(week));
+    }
     public List<com.songyb.bs.classes.table> getTable() {
         return table;
     }
@@ -141,7 +143,8 @@ public class TableCollecter {
         return today;
     }
     public boolean is_now_week(int now_week,String week_info){
-        return now_week >= Integer.parseInt(week_info.substring(0, week_info.indexOf('-'))) && now_week <= Integer.parseInt(week_info.substring(week_info.indexOf('-') + 1));
+        String str = "-"+String.valueOf(now_week)+"-";
+        return week_info.contains(str);
     }
     public boolean isDataOk() { return status_code==1;}
 }

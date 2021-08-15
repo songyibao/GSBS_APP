@@ -13,8 +13,39 @@
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_flexGrow="2">
-
+            app:layout_flexGrow="2"
+            app:justifyContent="space_between">
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:justifyContent="center"
+                app:alignItems="center">
+                <ImageView
+                    android:foregroundGravity="center"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/classes"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="15dp"/>
+                <TextView
+                    android:id="@+id/week_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="第1周"/>
+            </com.google.android.flexbox.FlexboxLayout>
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:justifyContent="center"
+                app:alignItems="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="点击选择周数 >"
+                    android:layout_marginRight="15dp"/>
+            </com.google.android.flexbox.FlexboxLayout>
         </com.google.android.flexbox.FlexboxLayout>
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
