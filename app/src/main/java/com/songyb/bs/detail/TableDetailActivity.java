@@ -260,6 +260,7 @@ public class TableDetailActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DATA_OK:
+                    week_order.setText("第"+collecter.getToday().get("week")+"周");
                     setDay();
                     addAllClass();
                     break;

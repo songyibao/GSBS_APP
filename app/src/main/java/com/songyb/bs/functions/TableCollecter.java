@@ -49,22 +49,6 @@ public class TableCollecter {
         this.num = num;
         this.pass = pass;
         this.context = context;
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url("https://api.songyb.xyz/utils/set_term_start.php").build();
-            Call call2 = client.newCall(request);
-            String response2 = null;
-            try {
-                response2 = Objects.requireNonNull(call2.execute().body()).string();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                today = getTodayInfo(response2);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
     public TableCollecter(String num, String pass, Context context, Handler handler) {
         this.num = num;
@@ -88,6 +72,20 @@ public class TableCollecter {
                 if (response.isSuccessful()) {
                     table_srting = Objects.requireNonNull(response.body()).string();
                     table = JSONArray.parseArray(table_srting, com.songyb.bs.classes.table.class);
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder().url("https://api.songyb.xyz/utils/set_term_start.php").build();
+                    Call call2 = client.newCall(request);
+                    String response2 = null;
+                    try {
+                        response2 = Objects.requireNonNull(call2.execute().body()).string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        today = getTodayInfo(response2);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     for(int i=0;i<table.size();i++){
                         assert today != null;
                         table.get(i).setIs_now_week(is_now_week(Integer.parseInt(Objects.requireNonNull(today.get("week"))), table.get(i).getWeek()));
@@ -135,7 +133,7 @@ public class TableCollecter {
             return week_info;
         }
         date_diff = (int)(date_diff/oneday);
-        int tmp = (int)Math.ceil((date_diff-week_leave)/week_len)+1;
+        int tmp = (int)Math.ceil((double)(date_diff-week_leave)/week_len)+1;
         week_info.put("week",String.valueOf(tmp));
         return week_info;
     }
