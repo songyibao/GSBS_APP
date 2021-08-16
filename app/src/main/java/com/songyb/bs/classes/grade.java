@@ -5,9 +5,13 @@ public class grade {
     private String gradeScore;
     private String name;
     private String score;
+    private String jxb_id;
     private int term;
     private int year;
 
+    public void setJxb_id(String jxb_id) {
+        this.jxb_id = jxb_id;
+    }
 
     public void setCredit(String credit) {
         this.credit = credit;
@@ -31,6 +35,10 @@ public class grade {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public String getJxb_id() {
+        return jxb_id;
     }
 
     public String getCredit() {

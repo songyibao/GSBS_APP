@@ -166,4 +166,20 @@ public class GradeCollecter {
         }
         return tmp;
     }
+    public String getJxb_idByName(String name){
+        for(grade x:grade){
+            if(x.getName().equals(name)){
+                return x.getJxb_id();
+            }
+        }
+        return "none";
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public String getPass() {
+        return pass;
+    }
 }
