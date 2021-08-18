@@ -1,6 +1,8 @@
 package com.songyb.bs.classes;
 
-public class table {
+import java.io.Serializable;
+
+public class table implements Serializable {
     private int date;
     private int length;
     private String name;

@@ -1,6 +1,8 @@
 package com.songyb.bs.classes;
 
-public class grade {
+import java.io.Serializable;
+
+public class grade implements Serializable {
     private String credit;
     private String gradeScore;
     private String name;

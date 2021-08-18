@@ -1,4 +1,6 @@
 package com.songyb.bs.classes;
 
-public class exam {
+import java.io.Serializable;
+
+public class exam implements Serializable {
 }

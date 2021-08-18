@@ -43,6 +43,7 @@ import com.songyb.bs.classes.table;
 import com.songyb.bs.functions.TableCollecter;
 import com.songyb.bs.utils.Utils;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +53,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class TableDetailActivity extends AppCompatActivity {
+public class TableDetailActivity extends AppCompatActivity implements Serializable {
+    private List<CardView> classes_one_week = new ArrayList<>();
     private final int DATA_OK = 0;
     private final int DIALOG_SHOW = 1;
     private TextView week_order;
@@ -168,6 +170,7 @@ public class TableDetailActivity extends AppCompatActivity {
                 break;
         }
     }
+    @SuppressLint("SetTextI18n")
     public void alertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(TableDetailActivity.this);
         builder.setTitle("选择当前学期");
@@ -190,6 +193,7 @@ public class TableDetailActivity extends AppCompatActivity {
                 (dialog, which) -> {
                     int i = picker.getValue();
                     collecter.changeNowWeek(i);
+                    Toast.makeText(TableDetailActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
                     week_order.setText("第"+i+"周");
                     handler.sendEmptyMessage(DATA_OK);
                 });
@@ -204,6 +208,13 @@ public class TableDetailActivity extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void addAllClass(){
+        if(classes_one_week.size()>0){
+            ViewGroup group = (ViewGroup) classes_one_week.get(0).getParent();
+            for(int i=0;i<classes_one_week.size();i++){
+                group.removeView(classes_one_week.get(i));
+            }
+            classes_one_week.clear();
+        }
         List<table> table_other_week = collecter.getTable().stream().filter(s->!s.isIs_now_week()).collect(Collectors.toList());
         List<table> table_now_week = collecter.getTable().stream().filter(table::isIs_now_week).collect(Collectors.toList());
         table x;
@@ -252,6 +263,7 @@ public class TableDetailActivity extends AppCompatActivity {
         middle_holder.addView(text,0,params2);
         holder.addView(middle_holder,0,params3);
         addContentView(holder, params);
+        classes_one_week.add(holder);
     }
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){

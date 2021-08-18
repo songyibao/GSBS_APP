@@ -13,6 +13,7 @@ import com.songyb.bs.detail.GradeDetailActivity;
 import com.songyb.bs.utils.Utils;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class GradeCollecter {
+public class GradeCollecter implements Serializable {
     private List<Map<String,String>> date_map;
     private int status_code = 0;
     private Handler handler;
@@ -166,9 +167,9 @@ public class GradeCollecter {
         }
         return tmp;
     }
-    public String getJxb_idByName(String name){
+    public String getJxb_id(String name,String year,String term){
         for(grade x:grade){
-            if(x.getName().equals(name)){
+            if(x.getName().equals(name) && String.valueOf(x.getTerm()).equals(term) && String.valueOf(x.getYear()).equals(year)){
                 return x.getJxb_id();
             }
         }

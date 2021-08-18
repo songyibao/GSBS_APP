@@ -15,6 +15,7 @@ import com.songyb.bs.detail.GradeDetailActivity;
 import com.songyb.bs.utils.Utils;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class TableCollecter {
+public class TableCollecter implements Serializable {
     private Map<String,String> today = null;
     private List<Map<String,String>> date_map;
     private int status_code = 0;
