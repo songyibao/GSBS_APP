@@ -57,7 +57,7 @@ public class TableCollecter implements Serializable {
         this.context = context;
         this.handler = handler;
     }
-    public void search() {
+    public void search(Context context) {
         String url = "https://api.songyb.xyz/utils/get_grade_by_xh_mm.php?num=" + num + "&pass=" + pass + "&flag=table";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -72,6 +72,9 @@ public class TableCollecter implements Serializable {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     table_srting = Objects.requireNonNull(response.body()).string();
+                    Map<String,String> table_info_string = new HashMap();
+                    table_info_string.put("String",table_srting);
+//                    Utils.setStorage(context, "TableInfo",table_info_string);
                     table = JSONArray.parseArray(table_srting, com.songyb.bs.classes.table.class);
                     OkHttpClient client = new OkHttpClient();
                     Request request = new Request.Builder().url("https://api.songyb.xyz/utils/set_term_start.php").build();
@@ -79,6 +82,8 @@ public class TableCollecter implements Serializable {
                     String response2 = null;
                     try {
                         response2 = Objects.requireNonNull(call2.execute().body()).string();
+                        table_info_string.put("TermStart",response2);
+                        Utils.setStorage(context, "TableInfo",table_info_string);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -96,7 +101,25 @@ public class TableCollecter implements Serializable {
             }
         });
     }
-
+    public void initData(Context context){
+        String this_table_string = Utils.getStorage(context,"TableInfo","String");
+        String this_today = Utils.getStorage(context,"TableInfo","TermStart");
+        if(this_table_string != null && this_today!=null){
+            table = JSONArray.parseArray(this_table_string, com.songyb.bs.classes.table.class);
+            try {
+                today = getTodayInfo(this_today);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            for(int i=0;i<table.size();i++){
+                assert today != null;
+                table.get(i).setIs_now_week(is_now_week(Integer.parseInt(Objects.requireNonNull(today.get("week"))), table.get(i).getWeek()));
+            }
+            status_code=1;
+        }else{
+            search(context);
+        }
+    }
     public void changeNowWeek(int week){
         for(int i=0;i<table.size();i++){
             table.get(i).setIs_now_week(is_now_week(week, table.get(i).getWeek()));
@@ -146,4 +169,11 @@ public class TableCollecter implements Serializable {
         return week_info.contains(str);
     }
     public boolean isDataOk() { return status_code==1;}
+    public void clearStatus_code() {
+        status_code = 0;
+    }
+
+    public int getStatus_code() {
+        return status_code;
+    }
 }

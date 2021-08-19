@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -54,9 +55,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class TableDetailActivity extends AppCompatActivity implements Serializable {
-    private List<CardView> classes_one_week = new ArrayList<>();
     private final int DATA_OK = 0;
     private final int DIALOG_SHOW = 1;
+    private static final int REFRESH_OK = 2;
+
+
+    private List<CardView> classes_one_week = new ArrayList<>();
     private TextView week_order;
     private FlexboxLayout top;
     private FlexboxLayout left;
@@ -88,36 +92,29 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
         matchView();
         initData();
         initListener();
-        Toast.makeText(this,"数据加载中",Toast.LENGTH_LONG).show();
+        showRefreshButton();
+        Toast.makeText(this,"数据加载中",Toast.LENGTH_SHORT).show();
     }
     public void matchView(){
-        top = (FlexboxLayout) findViewById(R.id.top);
-        left =(FlexboxLayout) findViewById(R.id.left);
-        right =(FlexboxLayout) findViewById(R.id.right);
-        corner = (CardView) findViewById(R.id.corner);
+        top = findViewById(R.id.top);
+        left = findViewById(R.id.left);
+        right =findViewById(R.id.right);
+        corner = findViewById(R.id.corner);
         ViewGroup.LayoutParams params = corner.getLayoutParams();
         params.width = (int) Math.round(left_length);
-        week_order =(TextView) findViewById(R.id.week_order);
+        week_order = findViewById(R.id.week_order);
         corner.setLayoutParams(params);
 //        right_list = findViewById(R.id.right_list);
     }
     public void initListener(){
-        top.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handler.sendEmptyMessage(DIALOG_SHOW);
-            }
-        });
+        top.setOnClickListener(v -> handler.sendEmptyMessage(DIALOG_SHOW));
     }
     public void initData(){
         collecter = new TableCollecter(Utils.getStorage(TableDetailActivity.this, "AcountInfo", "username"),Utils.getStorage(TableDetailActivity.this, "AcountInfo", "password"),TableDetailActivity.this);
-        collecter.search();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(!collecter.isDataOk()){}
-                handler.sendEmptyMessage(DATA_OK);
-            }
+        collecter.initData(TableDetailActivity.this);
+        new Thread(() -> {
+            while(!collecter.isDataOk()){}
+            handler.sendEmptyMessage(DATA_OK);
         }).start();
     }
     public void setWidthAndHeight(){
@@ -138,34 +135,34 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
     }
     public void setDay(){
         String day = collecter.getToday().get("day");
-        CardView day_card =null;
+        CardView day_card ;
         switch (Objects.requireNonNull(day)){
             case "周一":
-                day_card = (CardView) findViewById(R.id.mon);
+                day_card = findViewById(R.id.mon);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
             case "周二":
-                day_card = (CardView) findViewById(R.id.tue);
+                day_card = findViewById(R.id.tue);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
             case "周三":
-                day_card = (CardView) findViewById(R.id.wed);
+                day_card = findViewById(R.id.wed);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
             case "周四":
-                day_card = (CardView) findViewById(R.id.thu);
+                day_card = findViewById(R.id.thu);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
             case "周五":
-                day_card = (CardView) findViewById(R.id.fri);
+                day_card = findViewById(R.id.fri);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
             case "周六":
-                day_card = (CardView) findViewById(R.id.sat);
+                day_card = findViewById(R.id.sat);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
             case "周日":
-                day_card = (CardView) findViewById(R.id.sun);
+                day_card = findViewById(R.id.sun);
                 day_card.setCardBackgroundColor(Color.parseColor("#E6EDF3"));
                 break;
         }
@@ -181,12 +178,9 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
         picker.setMaxValue(16);
         picker.setMinValue(1);
         picker.setValue(Integer.parseInt(Objects.requireNonNull(collecter.getToday().get("week"))));
-        picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                v.vibrate(30);
+        picker.setOnValueChangedListener((picker1, oldVal, newVal) -> {
+            v.vibrate(30);
 //                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
-            }
         });
         builder.setView(picker);
         builder.setPositiveButton("确定",
@@ -265,8 +259,43 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
         addContentView(holder, params);
         classes_one_week.add(holder);
     }
+    public void showRefreshButton(){
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.gravity = Gravity.TOP | Gravity.LEFT;
+        params.leftMargin = (int) Math.round(width*0.86);
+        params.topMargin = (int) Math.round(height*0.90);
+        params.height = 150;
+        params.width = 150;
+        CardView button = new CardView(TableDetailActivity.this);
+        button.setCardBackgroundColor(Color.parseColor("#ffffff"));
+        button.setRadius(75);
+        button.setOnClickListener(v -> {
+            if(classes_one_week.size()>0){
+                ViewGroup group = (ViewGroup) classes_one_week.get(0).getParent();
+                for(int i=0;i<classes_one_week.size();i++){
+                    group.removeView(classes_one_week.get(i));
+                }
+                classes_one_week.clear();
+            }
+            Toast.makeText(TableDetailActivity.this,"正在查询，请稍后",Toast.LENGTH_SHORT).show();
+            collecter.search(TableDetailActivity.this);
+            collecter.clearStatus_code();
+            new Thread(() -> {
+                while (collecter.getStatus_code() != 1) {
+                }
+                handler.sendEmptyMessage(REFRESH_OK);
+            }).start();
+        });
+        ImageView image = new ImageView(TableDetailActivity.this);
+        image.setImageResource(R.drawable.refresh);
+        LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        image.setLayoutParams(p2);
+        button.addView(image);
+        addContentView(button,params);
+    }
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){
+        @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void handleMessage(Message msg) {
@@ -275,9 +304,13 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
                     week_order.setText("第"+collecter.getToday().get("week")+"周");
                     setDay();
                     addAllClass();
+                    Toast.makeText(TableDetailActivity.this,"加载完毕",Toast.LENGTH_SHORT).show();
                     break;
                 case DIALOG_SHOW:
                     alertDialog();
+                    break;
+                case REFRESH_OK:
+                    handler.sendEmptyMessage(DATA_OK);
                     break;
             }
         }

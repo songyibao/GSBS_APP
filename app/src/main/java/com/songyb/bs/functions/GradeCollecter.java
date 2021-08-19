@@ -52,7 +52,7 @@ public class GradeCollecter implements Serializable {
         this.context = context;
         this.handler = handler;
     }
-    public void search() {
+    public void search(Context context) {
         String url = "https://api.songyb.xyz/utils/get_grade_by_xh_mm.php?num=" + num + "&pass=" + pass + "&flag=grade";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -67,8 +67,12 @@ public class GradeCollecter implements Serializable {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     grade_srting = response.body().string();
+                    Map<String,String> grade_info_string = new HashMap();
+                    grade_info_string.put("String",grade_srting);
+                    Utils.setStorage(context, "GradeInfo",grade_info_string);
                     grade = JSONArray.parseArray(grade_srting, com.songyb.bs.classes.grade.class);
 //                    Collections.reverse(grade);
+                    grade_zh.clear();
                     for (com.songyb.bs.classes.grade grade_item : grade) {
                         Map<String, String> map_item = new HashMap<>();
                         map_item.put("课程名称", grade_item.getName());
@@ -82,7 +86,25 @@ public class GradeCollecter implements Serializable {
             }
         });
     }
-
+    public void initData(Context context){
+        String this_grade_string = Utils.getStorage(context,"GradeInfo","String");
+        if(this_grade_string != null){
+            grade = JSONArray.parseArray(this_grade_string, com.songyb.bs.classes.grade.class);
+//                    Collections.reverse(grade);
+            grade_zh.clear();
+            for (com.songyb.bs.classes.grade grade_item : grade) {
+                Map<String, String> map_item = new HashMap<>();
+                map_item.put("课程名称", grade_item.getName());
+                map_item.put("学分", grade_item.getCredit());
+                map_item.put("成绩", grade_item.getScore());
+                map_item.put("绩点", grade_item.getGradeScore());
+                grade_zh.add(map_item);
+            }
+            status_code=1;
+        }else{
+            search(context);
+        }
+    }
     public List<Map<String, String>> getGradeMapByYearAndTerm(int year,int term) {
         List<Map<String, String>> list = new ArrayList<>();
         for (com.songyb.bs.classes.grade grade_item : grade) {
@@ -107,6 +129,9 @@ public class GradeCollecter implements Serializable {
     }
     public int getStatus_code(){
         return status_code;
+    }
+    public void clearStatus_code() {
+        status_code = 0;
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public List<Map<String,String>> getDate_list(){
