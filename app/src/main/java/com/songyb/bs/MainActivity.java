@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.songyb.bs.classes.Func;
 import com.songyb.bs.classes.Userinfo;
+import com.songyb.bs.detail.ExamDetailActivity;
 import com.songyb.bs.detail.GradeDetailActivity;
 import com.songyb.bs.detail.TableDetailActivity;
 import com.songyb.bs.login.LoginActivity;
@@ -111,6 +112,13 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this,LoginActivity.class));
                     }else{
                         startActivity(new Intent(MainActivity.this, TableDetailActivity.class));
+                    }
+                }else if(func_item.getName().equals("考试查询")){
+                    if(Utils.getStorage(MainActivity.this,"AcountInfo","username")==null || Utils.getStorage(MainActivity.this,"AcountInfo","password")==null){
+                        Toast.makeText(MainActivity.this,"请先登录",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    }else{
+                        startActivity(new Intent(MainActivity.this, ExamDetailActivity.class));
                     }
                 }
             }

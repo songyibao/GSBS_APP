@@ -16,9 +16,11 @@
         <entry key="..\:/bs/app/src/main/res/layout/activity_detail.xml" value="0.1" />
         <entry key="..\:/bs/app/src/main/res/layout/activity_login.xml" value="0.176" />
         <entry key="..\:/bs/app/src/main/res/layout/activity_main.xml" value="0.176" />
+        <entry key="..\:/bs/app/src/main/res/layout/exam_detail.xml" value="0.13020833333333334" />
         <entry key="..\:/bs/app/src/main/res/layout/grade_detail.xml" value="0.16875" />
         <entry key="..\:/bs/app/src/main/res/layout/layout.xml" value="0.11145833333333334" />
         <entry key="..\:/bs/app/src/main/res/layout/listview_date.xml" value="0.2" />
+        <entry key="..\:/bs/app/src/main/res/layout/listview_exam.xml" value="0.13020833333333334" />
         <entry key="..\:/bs/app/src/main/res/layout/listview_grade.xml" value="0.1" />
         <entry key="..\:/bs/app/src/main/res/layout/listview_left_order.xml" value="0.1984375" />
         <entry key="..\:/bs/app/src/main/res/layout/listview_main.xml" value="0.16302083333333334" />

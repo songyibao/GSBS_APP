@@ -9,18 +9,18 @@ import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSONArray;
 import com.songyb.bs.classes.grade;
-import com.songyb.bs.detail.GradeDetailActivity;
+
 import com.songyb.bs.utils.Utils;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+
 import java.util.logging.Handler;
 
 import okhttp3.Call;
@@ -34,7 +34,6 @@ public class GradeCollecter implements Serializable {
     private int status_code = 0;
     private Handler handler;
     private final Context context;
-    private ProgressDialog progressDialog;
     private final String num;
     private final String pass;
     private String grade_srting;
@@ -45,12 +44,6 @@ public class GradeCollecter implements Serializable {
         this.num = num;
         this.pass = pass;
         this.context = context;
-    }
-    public GradeCollecter(String num, String pass, Context context, Handler handler) {
-        this.num = num;
-        this.pass = pass;
-        this.context = context;
-        this.handler = handler;
     }
     public void search(Context context) {
         String url = "https://api.songyb.xyz/utils/get_grade_by_xh_mm.php?num=" + num + "&pass=" + pass + "&flag=grade";
@@ -151,47 +144,7 @@ public class GradeCollecter implements Serializable {
         }
         return date_list_final;
     }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public int getBiggestTermByYear(int year){
-        List<Map<String,String>> date_list_final = new ArrayList<>();
-        int tmp = 0;
-        date_list_final = getDate_list();
-        for(Map<String,String> it:date_list_final){
-            if(Objects.equals(it.get("year"), String.valueOf(year))){
-                int x = Integer.parseInt(Objects.requireNonNull(it.get("term")));
-                if(x>tmp){
-                    tmp=x;
-                }
-            }
-        }
-        return tmp;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public int getBottomYear(){
-        List<Map<String,String>> date_list_final = new ArrayList<>();
-        int tmp = 3000;
-        date_list_final = getDate_list();
-        for(Map<String,String> it:date_list_final){
-            int x = Integer.parseInt(Objects.requireNonNull(it.get("year")));
-            if(x<tmp){
-                tmp = x;
-            }
-        }
-        return tmp;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public int getTopYear(){
-        List<Map<String,String>> date_list_final = new ArrayList<>();
-        int tmp = 0;
-        date_list_final = getDate_list();
-        for(Map<String,String> it:date_list_final){
-            int x = Integer.parseInt(Objects.requireNonNull(it.get("year")));
-            if(x>tmp){
-                tmp = x;
-            }
-        }
-        return tmp;
-    }
+
     public String getJxb_id(String name,String year,String term){
         for(grade x:grade){
             if(x.getName().equals(name) && String.valueOf(x.getTerm()).equals(term) && String.valueOf(x.getYear()).equals(year)){

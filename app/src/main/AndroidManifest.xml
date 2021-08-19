@@ -23,6 +23,9 @@
             android:name=".detail.GradeDetailActivity"
             android:label="@string/title_activity_detail" />
         <activity
+            android:name=".detail.ExamDetailActivity"
+            android:label="@string/title_activity_detail" />
+        <activity
             android:name=".login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".MainActivity">
