@@ -2,41 +2,40 @@ package com.songyb.bs.detail;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.content.Context;
 import android.graphics.Color;
-import android.media.Image;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.util.Log;
+
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
+
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.NumberPicker;
+
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.flexbox.FlexboxLayout;
-import com.songyb.bs.MainActivity;
+
 import com.songyb.bs.R;
 import com.songyb.bs.functions.GradeCollecter;
 import com.songyb.bs.utils.Utils;
@@ -56,7 +55,7 @@ import okhttp3.Request;
 public class GradeDetailActivity extends AppCompatActivity implements Serializable {
     private static final int REFRESH_OK = 4;
     private static final int GRADE_DETAIL_OK = 3;
-    private static final String TAG = "log";
+
     private String grade_detail;
     private TextView grade_detail_view;
     private FlexboxLayout date_view_con;
@@ -88,14 +87,14 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
         initData();
     }
     public void matchView(){
-        list_loading = (FlexboxLayout) findViewById(R.id.list_loading);
-        list_view = (ListView) findViewById(R.id.lv_detail);
-        date_view = (ListView) findViewById(R.id.date_view);
-        now_year = (TextView) findViewById(R.id.now_year);
-        now_term = (TextView) findViewById(R.id.now_term);
-        date_view_con = (FlexboxLayout) findViewById(R.id.date_view_con);
-        title_con = (FlexboxLayout) findViewById(R.id.title_con);
-        header_container = (FlexboxLayout) findViewById(R.id.header_container);
+        list_loading = findViewById(R.id.list_loading);
+        list_view = findViewById(R.id.lv_detail);
+        date_view = findViewById(R.id.date_view);
+        now_year = findViewById(R.id.now_year);
+        now_term = findViewById(R.id.now_term);
+        date_view_con = findViewById(R.id.date_view_con);
+        title_con = findViewById(R.id.title_con);
+        header_container = findViewById(R.id.header_container);
         list_loading.setVisibility(View.VISIBLE);
         list_view.setVisibility(View.GONE);
     }
@@ -110,7 +109,7 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
         height = screenHeight - statusBarHeight;
     }
     public void initData(){
-        collecter = new GradeCollecter(Utils.getStorage(GradeDetailActivity.this, "AcountInfo", "username"), Utils.getStorage(GradeDetailActivity.this, "AcountInfo", "password"), GradeDetailActivity.this);
+        collecter = new GradeCollecter(Utils.getStorage(GradeDetailActivity.this, "AccountInfo", "username"), Utils.getStorage(GradeDetailActivity.this, "AccountInfo", "password"), GradeDetailActivity.this);
         collecter.initData(GradeDetailActivity.this);
         new Thread(() -> {
             while (collecter.getStatus_code() != 1) {
@@ -144,10 +143,6 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
                 handler.sendEmptyMessage(REFRESH_OK);
             }).start();
         });
-//        TextView text = new TextView(GradeDetailActivity.this);
-//        text.setGravity(Gravity.CENTER);
-//        text.setText("刷新");
-//        text.setBackgroundColor(Color.parseColor("#000000"));
         ImageView image = new ImageView(GradeDetailActivity.this);
         image.setImageResource(R.drawable.refresh);
         LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -166,33 +161,27 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
                 new int[]{R.id.year, R.id.term}
         );
         date_view.setAdapter(date_item);
-        date_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                header_container.setVisibility(View.VISIBLE);
-                title_con.setVisibility(View.VISIBLE);
-                list_view.setVisibility(View.VISIBLE);
-                date_view_con.setVisibility(View.GONE);
-                Map<String, String> map = new HashMap<>();
-                map = date_map.get(position);
-                now_year.setText(map.get("year") + "学年");
-                now_term.setText("第" + map.get("term") + "学期");
-                list_map.clear();
-                list_map.addAll(collecter.getGradeMapByYearAndTerm(Integer.parseInt(Objects.requireNonNull(map.get("year"))), Integer.parseInt(Objects.requireNonNull(map.get("term")))));
-                list_item.notifyDataSetChanged();
-            }
+        date_view.setOnItemClickListener((parent, view, position, id) -> {
+            header_container.setVisibility(View.VISIBLE);
+            title_con.setVisibility(View.VISIBLE);
+            list_view.setVisibility(View.VISIBLE);
+            date_view_con.setVisibility(View.GONE);
+            Map<String, String> map;
+            map = date_map.get(position);
+            now_year.setText(map.get("year") + "学年");
+            now_term.setText("第" + map.get("term") + "学期");
+            list_map.clear();
+            list_map.addAll(collecter.getGradeMapByYearAndTerm(Integer.parseInt(Objects.requireNonNull(map.get("year"))), Integer.parseInt(Objects.requireNonNull(map.get("term")))));
+            list_item.notifyDataSetChanged();
         });
-        header_container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (date_view_con.getVisibility() == View.VISIBLE) {
-                    date_view_con.setVisibility(View.GONE);
-                } else {
-                    header_container.setVisibility(View.GONE);
-                    title_con.setVisibility(View.GONE);
-                    list_view.setVisibility(View.GONE);
-                    date_view_con.setVisibility(View.VISIBLE);
-                }
+        header_container.setOnClickListener(v -> {
+            if (date_view_con.getVisibility() == View.VISIBLE) {
+                date_view_con.setVisibility(View.GONE);
+            } else {
+                header_container.setVisibility(View.GONE);
+                title_con.setVisibility(View.GONE);
+                list_view.setVisibility(View.GONE);
+                date_view_con.setVisibility(View.VISIBLE);
             }
         });
         setDateView();
@@ -207,6 +196,7 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
         handler.sendEmptyMessage(2);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void initListView() {
         list_item = new SimpleAdapter(
                 this,
@@ -215,21 +205,17 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
                 new String[]{"课程名称", "学分", "成绩", "绩点"},
                 new int[]{R.id.name, R.id.credit, R.id.score, R.id.gradeScore}
         );
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String name = list_map.get(position).get("课程名称");
-                String jxb_id = collecter.getJxb_id(name, String.valueOf(now_year.getText()).substring(0, 4), String.valueOf(now_term.getText()).substring(1, 2));
-                alertSubjectDialog(name, jxb_id);
-            }
+        list_view.setOnItemClickListener((parent, view, position, id) -> {
+            String name = list_map.get(position).get("课程名称");
+            String jxb_id = collecter.getJxb_id(name, String.valueOf(now_year.getText()).substring(0, 4), String.valueOf(now_term.getText()).substring(1, 2));
+            alertSubjectDialog(name, jxb_id);
         });
         list_view.setAdapter(list_item);
         setListView();
         handler.sendEmptyMessage(1);
     }
     public void setListView(){
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map;
         map = date_map.get(date_map.size() - 1);
         list_map.clear();
         list_map.addAll(collecter.getGradeMapByYearAndTerm(Integer.parseInt(Objects.requireNonNull(map.get("year"))), Integer.parseInt(Objects.requireNonNull(map.get("term")))));
@@ -276,24 +262,16 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
     public void alertSubjectDialog(String name, String jxb_id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(GradeDetailActivity.this);
         builder.setTitle("详情:" + name);
-        // 设置我们自己定义的布局文件作为弹出框的Content
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         grade_detail_view = new TextView(GradeDetailActivity.this);
         grade_detail_view.setText("  正在查询成绩详情,请稍等");
         grade_detail_view.setTextSize(20);
         grade_detail_view.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        p.setMargins(20,10,20,10);
-//        grade_detail_view.setLayoutParams(p);
+
         builder.setView(grade_detail_view);
         builder.setPositiveButton("确定",
-                (dialog, which) -> {
-                    grade_detail_view = null;
-                });
+                (dialog, which) -> grade_detail_view = null);
 
-//        builder.setNegativeButton("取消",
-//                (dialog, which) -> {
-//                });
         builder.show();
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -301,7 +279,7 @@ public class GradeDetailActivity extends AppCompatActivity implements Serializab
             Request request = new Request.Builder().url(url).build();
             Call call = client.newCall(request);
             try {
-                grade_detail = call.execute().body().string();
+                grade_detail = Objects.requireNonNull(call.execute().body()).string();
             } catch (IOException e) {
                 e.printStackTrace();
             }

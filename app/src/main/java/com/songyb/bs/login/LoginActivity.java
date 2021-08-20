@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                         Map<String,String> userinfo = new HashMap<String,String>();
                         userinfo.put("username",name);
                         userinfo.put("password",pass);
-                        boolean status = Utils.setStorage(LoginActivity.this,"AcountInfo",userinfo);
+                        boolean status = Utils.setStorage(LoginActivity.this,"AccountInfo",userinfo);
                         setResult(status?RESULT_OK:0);
                         if(status){
                             handler.sendEmptyMessage(1);

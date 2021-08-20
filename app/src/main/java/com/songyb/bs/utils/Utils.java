@@ -36,7 +36,7 @@ public class Utils {
     }
 
     public static boolean isLogin(Context context) {
-        return Utils.getStorage(context, "AcountInfo", "username") != null && Utils.getStorage(context, "AcountInfo", "password") != null;
+        return Utils.getStorage(context, "AccountInfo", "username") != null && Utils.getStorage(context, "AccountInfo", "password") != null;
     }
 
     public static int dip2px(Context context, float dpValue) {

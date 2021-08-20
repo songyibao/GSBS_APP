@@ -1,62 +1,55 @@
 package com.songyb.bs.detail;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
+
 import android.graphics.Color;
-import android.media.Image;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Vibrator;
+
 import android.util.DisplayMetrics;
-import android.util.Log;
+
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
+
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.NumberPicker;
+
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.flexbox.FlexboxLayout;
-import com.songyb.bs.MainActivity;
+
 import com.songyb.bs.R;
 import com.songyb.bs.functions.ExamCollecter;
 import com.songyb.bs.utils.Utils;
 
-import java.io.IOException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+
 
 public class ExamDetailActivity extends AppCompatActivity implements Serializable {
     private static final int REFRESH_OK = 4;
     private static final int EXAM_DETAIL_OK = 3;
-    private static final String TAG = "log";
 //    private String grade_detail;
 //    private TextView grade_detail_view;
     private FlexboxLayout date_view_con;
@@ -110,7 +103,7 @@ public class ExamDetailActivity extends AppCompatActivity implements Serializabl
         height = screenHeight - statusBarHeight;
     }
     public void initData(){
-        collecter = new ExamCollecter(Utils.getStorage(ExamDetailActivity.this, "AcountInfo", "username"), Utils.getStorage(ExamDetailActivity.this, "AcountInfo", "password"), ExamDetailActivity.this);
+        collecter = new ExamCollecter(Utils.getStorage(ExamDetailActivity.this, "AccountInfo", "username"), Utils.getStorage(ExamDetailActivity.this, "AccountInfo", "password"), ExamDetailActivity.this);
         collecter.initData(ExamDetailActivity.this);
         new Thread(() -> {
             while (collecter.getStatus_code() != 1) {
@@ -167,7 +160,7 @@ public class ExamDetailActivity extends AppCompatActivity implements Serializabl
             title_con.setVisibility(View.VISIBLE);
             list_view.setVisibility(View.VISIBLE);
             date_view_con.setVisibility(View.GONE);
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map;
             map = date_map.get(position);
             now_year.setText(map.get("year") + "学年");
             now_term.setText("第" + map.get("term") + "学期");
@@ -210,7 +203,7 @@ public class ExamDetailActivity extends AppCompatActivity implements Serializabl
         handler.sendEmptyMessage(1);
     }
     public void setListView(){
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map;
         map = date_map.get(date_map.size() - 1);
         list_map.clear();
         list_map.addAll(collecter.getExamMapByYearAndTerm(String.valueOf(map.get("year")), Integer.parseInt(Objects.requireNonNull(map.get("term")))));

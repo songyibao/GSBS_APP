@@ -26,7 +26,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+//import android.widget.ListView;
 import android.widget.NumberPicker;
 
 import android.widget.TextView;
@@ -57,13 +57,11 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
     private List<CardView> classes_one_week = new ArrayList<>();
     private TextView week_order;
     private FlexboxLayout top;
-    private FlexboxLayout left;
-    private FlexboxLayout right;
+//    private FlexboxLayout left;
+//    private FlexboxLayout right;
     private CardView corner;
-    private ListView left_list;
-    private ListView right_list;
     private TableCollecter collecter;
-    private int now_week;
+//    private int now_week;
     private int width;
     private int height;
     private double content_height;
@@ -90,20 +88,19 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
     }
     public void matchView(){
         top = findViewById(R.id.top);
-        left = findViewById(R.id.left);
-        right =findViewById(R.id.right);
+//        left = findViewById(R.id.left);
+//        right =findViewById(R.id.right);
         corner = findViewById(R.id.corner);
         ViewGroup.LayoutParams params = corner.getLayoutParams();
         params.width = (int) Math.round(left_length);
         week_order = findViewById(R.id.week_order);
         corner.setLayoutParams(params);
-//        right_list = findViewById(R.id.right_list);
     }
     public void initListener(){
         top.setOnClickListener(v -> handler.sendEmptyMessage(DIALOG_SHOW));
     }
     public void initData(){
-        collecter = new TableCollecter(Utils.getStorage(TableDetailActivity.this, "AcountInfo", "username"),Utils.getStorage(TableDetailActivity.this, "AcountInfo", "password"),TableDetailActivity.this);
+        collecter = new TableCollecter(Utils.getStorage(TableDetailActivity.this, "AccountInfo", "username"),Utils.getStorage(TableDetailActivity.this, "AccountInfo", "password"),TableDetailActivity.this);
         collecter.initData(TableDetailActivity.this);
         Toast.makeText(this,"数据加载中",Toast.LENGTH_SHORT).show();
         new Thread(() -> {
@@ -174,7 +171,6 @@ public class TableDetailActivity extends AppCompatActivity implements Serializab
         picker.setValue(Integer.parseInt(Objects.requireNonNull(collecter.getToday().get("week"))));
         picker.setOnValueChangedListener((picker1, oldVal, newVal) -> {
             v.vibrate(30);
-//                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         });
         builder.setView(picker);
         builder.setPositiveButton("确定",
