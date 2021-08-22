@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-//        Toast.makeText(MainActivity.this,String.valueOf(width)+String.valueOf(height), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(MainActivity.this,"username:"+Utils.getStorage(MainActivity.this,"AccountInfo","username")+",password:"+Utils.getStorage(MainActivity.this,"AccountInfo","password"),Toast.LENGTH_SHORT).show();
+
         initListView();
         initSwiper();
         initListener();

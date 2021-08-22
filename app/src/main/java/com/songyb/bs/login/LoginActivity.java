@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -60,14 +61,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public void initListener(){
         //监听输入变化事件
-        login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    LoginClient();
-                } catch (IOException e) {
-                    Toast.makeText(LoginActivity.this,e.toString(),Toast.LENGTH_SHORT).show();
-                }
+        login_btn.setOnClickListener(v -> {
+            try {
+                LoginClient();
+            } catch (IOException e) {
+                Toast.makeText(LoginActivity.this,e.toString(),Toast.LENGTH_SHORT).show();
             }
         });
         account.addTextChangedListener(new TextWatcher() {
@@ -84,11 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(password.getText().length() != 0){
-                    if(s.length() == 10){
-                        login_btn.setEnabled(true);
-                    }else{
-                        login_btn.setEnabled(false);
-                    }
+                    login_btn.setEnabled(s.length() == 10);
                 }
             }
         });
@@ -106,11 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(account.getText().length() == 10){
-                    if(s.length() != 0){
-                        login_btn.setEnabled(true);
-                    }else{
-                        login_btn.setEnabled(false);
-                    }
+                    login_btn.setEnabled(s.length() != 0);
                 }
             }
         });
@@ -133,11 +123,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.isSuccessful()){
-                    String result = response.body().string();
+                    String result = Objects.requireNonNull(response.body()).string();
                     //处理UI需要切换到UI线程处理
                     List<grade> grade = JSONArray.parseArray(result, com.songyb.bs.classes.grade.class);
                     if(grade.size()>0){
-                        Map<String,String> userinfo = new HashMap<String,String>();
+                        Map<String,String> userinfo = new HashMap<>();
                         userinfo.put("username",name);
                         userinfo.put("password",pass);
                         boolean status = Utils.setStorage(LoginActivity.this,"AccountInfo",userinfo);
@@ -155,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Looper.prepare();
                 Toast.makeText(LoginActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
                 Looper.loop();
