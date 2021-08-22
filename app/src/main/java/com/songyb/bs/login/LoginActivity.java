@@ -25,6 +25,7 @@ import com.songyb.bs.classes.grade;
 import com.songyb.bs.utils.Utils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,9 +112,9 @@ public class LoginActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(password.getWindowToken(), 0) ;
         loading.setVisibility(View.VISIBLE);
         //获取用户名的值
-        String name=account.getText().toString();
+        String name= URLEncoder.encode(account.getText().toString(),"UTF-8");
         //获取密码的值
-        String pass=password.getText().toString();
+        String pass=URLEncoder.encode(password.getText().toString(),"UTF-8");
         //获取网络上的servlet路径
         String url="https://api.songyb.xyz/utils/get_grade_by_xh_mm.php?num="+name+"&pass="+pass+"&flag=grade";
         OkHttpClient client = new OkHttpClient();
