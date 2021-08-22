@@ -26,6 +26,7 @@ import com.songyb.bs.utils.Utils;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +127,17 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     String result = Objects.requireNonNull(response.body()).string();
                     //处理UI需要切换到UI线程处理
-                    List<grade> grade = JSONArray.parseArray(result, com.songyb.bs.classes.grade.class);
+                    List<grade> grade = new ArrayList<>();
+                    try{
+                        grade = JSONArray.parseArray(result, com.songyb.bs.classes.grade.class);
+                    }catch (Exception e){
+                        Looper.prepare();
+                        Toast.makeText(LoginActivity.this, "登陆失败，请检查用户名和密码或者稍后重试", Toast.LENGTH_SHORT).show();
+                        finish();
+                        Looper.loop();
+                        return;
+                    }
+
                     if(grade.size()>0){
                         Map<String,String> userinfo = new HashMap<>();
                         userinfo.put("username",name);
@@ -139,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     }else{
                         Looper.prepare();
-                        Toast.makeText(LoginActivity.this, "数据错乱", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "无数据", Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }
                 }
